@@ -1,0 +1,25 @@
+{
+  "name": "storefront",
+  "version": "1.0.0",
+  "description": "An example of using node to query and manipulate a database in a 'real world' setting.",
+  "main": "management_portal.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/must-git-good/storefront.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/must-git-good/storefront/issues"
+  },
+  "homepage": "https://github.com/must-git-good/storefront#readme",
+  "dependencies": {
+    "inquirer": "^6.2.0",
+    "lodash": "^4.17.10",
+    "mysql": "^2.16.0"
+  }
+}
