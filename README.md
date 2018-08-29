@@ -19,7 +19,7 @@ This project is currently complete, but isn't web-deployable (it exists on and r
 
 ![Screenshot 3](https://raw.githubusercontent.com/must-git-good/storefront/master/readme_assets/store_flow_3.JPG)
 
-4. If a user tries to buy more items than there are in stock, they're that they can't.
+4. If a user tries to buy more items than there are in stock, they're told that they can't.
 
 ![Screenshot 4](https://raw.githubusercontent.com/must-git-good/storefront/master/readme_assets/store_flow_4.JPG)
 
