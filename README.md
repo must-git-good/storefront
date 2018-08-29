@@ -9,19 +9,19 @@ This project is currently complete, but isn't web-deployable (it exists on and r
 
 1.
 
-![Screenshot 1](../storefront/readme_assets/store_flow_1)
+![Screenshot 1](../master/readme_assets/store_flow_1)
 
 2.
 
-![Screenshot 2](../storefront/readme_assets/store_flow_2)
+![Screenshot 2](../master/readme_assets/store_flow_2)
 
 3.
 
-![Screenshot 3](../storefront/readme_assets/store_flow_3)
+![Screenshot 3](../master/readme_assets/store_flow_3)
 
 4.
 
-![Screenshot 4](../storefront/readme_assets/store_flow_4)
+![Screenshot 4](../master/readme_assets/store_flow_4)
 
 ### Purpose
 
