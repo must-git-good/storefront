@@ -9,7 +9,7 @@ This project is currently complete, but isn't web-deployable (it exists on and r
 
 1.
 
-![Screenshot 1](https://github.com/must-git-good/storefront/tree/master/readme_assets/store_flow_1)
+![Screenshot 1](https://github.com/must-git-good/storefront/tree/master/readme_assets/store_flow_1.jpg)
 
 2.
 
