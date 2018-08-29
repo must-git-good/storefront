@@ -83,7 +83,7 @@ var chooseToBuy = function () {
                 var query = "SELECT price FROM product_table WHERE id =" + answer.buySelection;
                 connection.query(query, function (err, res) {
                     itemPrice = parseFloat(res[0].price);
-                    if (bought < exist) {
+                    if (bought <= exist) {
                         var amountLeft = parseInt(exist - bought);
                         var query = "UPDATE product_table SET quantity = " + amountLeft + " WHERE id =" + answer.buySelection;
                         connection.query(query, function (err, res) {
@@ -91,8 +91,8 @@ var chooseToBuy = function () {
                             totalPrice = parseFloat(bought * itemPrice);
                         });
                         updateChart();
-                    } else if ((exist >= bought)) {
-                        console.log(chalk.orange("Not enough product to buy that many. Please see a manager to arrange for more to be stocked."));
+                    } else if (exist < bought) {
+                        console.log(chalk.yellow("Not enough product to buy that many. Please see a manager to arrange for more to be stocked."));
                         buyMoreQuestion();
                     };
                 });
