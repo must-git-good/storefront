@@ -9,7 +9,7 @@ This project is currently complete, but isn't web-deployable (it exists on and r
 
 1.
 
-![Screenshot 1](https://github.com/must-git-good/storefront/tree/master/readme_assets/store_flow_1.jpg)
+![Screenshot 1](https://raw.githubusercontent.com/must-git-good/storefront/master/readme_assets/store_flow_1.JPG)
 ![Screenshot 1](../master/readme_assets/store_flow_1.jpg?raw=true "Storefront Overview 1")
 
 2.
