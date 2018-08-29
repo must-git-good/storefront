@@ -7,22 +7,21 @@ An example of using node to query and manipulate a database in a 'real world' se
 This project is currently complete, but isn't web-deployable (it exists on and references local databases, currently)
 * Take a look at how the program would flow if you were running it yourself:
 
-1.
+1. First, we set up our shop with pre-defined content:
 
 ![Screenshot 1](https://raw.githubusercontent.com/must-git-good/storefront/master/readme_assets/store_flow_1.JPG)
-![Screenshot 1](../master/readme_assets/store_flow_1.jpg?raw=true "Storefront Overview 1")
 
 2.
 
-![Screenshot 2](../master/readme_assets/store_flow_2)
+![Screenshot 2](https://raw.githubusercontent.com/must-git-good/storefront/master/readme_assets/store_flow_2.JPG)
 
 3.
 
-![Screenshot 3](../master/readme_assets/store_flow_3)
+![Screenshot 3](https://raw.githubusercontent.com/must-git-good/storefront/master/readme_assets/store_flow_3.JPG)
 
 4.
 
-![Screenshot 4](../master/readme_assets/store_flow_4)
+![Screenshot 4](https://raw.githubusercontent.com/must-git-good/storefront/master/readme_assets/store_flow_4.JPG)
 
 ### Purpose
 
