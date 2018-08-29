@@ -1,13 +1,15 @@
-//Customer-interface:
+//Customer-interface (via node) for our mock digital storefront:
 
 
 // Set up npm requirements:
+// =============================================
 var inquirer = require("inquirer");
 var chalk = require("chalk");
 var mysql = require("mysql");
 var Table = require("cli-table");
 
 // Set up database log-in information:
+// =============================================
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
@@ -16,25 +18,24 @@ var connection = mysql.createConnection({
     database: "store_db"
 });
 
-//TRY REWORKING SOME OF THIS WITH CONSTRUCTORS FOR CLEANER CODE.
-
 
 //Define other global variables:
+// =============================================
+var totalPrice;         // This exists here to avoid scope issues. It will receive and hold the latest 'total' spent on each purchase.
+var itemPrice;          // Same deal.  <^
 
-var fullProductPicked = {};
-var item;
-var itemBought;
-var id = 0;
+
 
 // Establish connection and verify:
+// =============================================
 connection.connect(function (err) {
     if (err) throw err;
     // console.log("Connected to db with id: "+connection.threadId);     
 });
 
 
-
-//Display the "buyer storefront where all relevant information is listed:"
+// Display the "buyer storefront" where all relevant information is listed:
+// =============================================
 var generateStore = function () {
     var query = "SELECT * FROM product_table";
     connection.query(query, function (err, res) {
@@ -56,11 +57,14 @@ var generateStore = function () {
 
 
 };
+
+// A function that asks the user what to buy and how many:
+// =============================================
 var chooseToBuy = function () {
     var query = "SELECT * FROM product_table";
     connection.query(query, function (err, res) {
         if (err) throw err;
-        
+
         inquirer
             .prompt([
                 {
@@ -73,97 +77,74 @@ var chooseToBuy = function () {
                 },
             ])
             .then(function (answer) {
-                console.log(answer.buySelection);
-                console.log(answer.buyQuantity);
-                console.log(res[(answer.buySelection-1)].quantity);
-                if (answer.buyQuantity < res[answer.buySelection].quantity) {
-                    //update the db info now.
-                    console.log("You bought it!" );
-                } else if ((answer.buyQuantity >= res[answer.buySelection].quantity)) {
-                    console.log("Not enough product to buy that many. Please see a manager to arrange for more to be stocked." );
-                };
+                var bought = parseInt(answer.buyQuantity);
+                var exist = parseInt(res[(answer.buySelection - 1)].quantity);
+
+                var query = "SELECT price FROM product_table WHERE id =" + answer.buySelection;
+                connection.query(query, function (err, res) {
+                    itemPrice = parseFloat(res[0].price);
+                    if (bought < exist) {
+                        var amountLeft = parseInt(exist - bought);
+                        var query = "UPDATE product_table SET quantity = " + amountLeft + " WHERE id =" + answer.buySelection;
+                        connection.query(query, function (err, res) {
+                            if (err) throw err;
+                            totalPrice = parseFloat(bought * itemPrice);
+                        });
+                        updateChart();
+                    } else if ((exist >= bought)) {
+                        console.log(chalk.orange("Not enough product to buy that many. Please see a manager to arrange for more to be stocked."));
+                        buyMoreQuestion();
+                    };
+                });
             });
     });
 };
 
+// An asynchronous-friendly way of doing recursion in a controlled way: We use inquirer prompts to either "continue shopping" or to exit the program.
+// =============================================
+var buyMoreQuestion = function () {
+    console.log(chalk.blue("\n\n\nThanks for shopping with us!\n\n"));
+    inquirer
+        .prompt([
+            {
+                name: "buyMore",
+                message: "Would you like to make another purchase?"
+            }
+        ])
+        .then(function (answer) {
+            if (answer.buyMore === ("yes" || "y" || "Yes" || "Y" || "yeah" || "Yeah" || "Ok" || "k" || "yup" || "Yup" || "ok" || "Alright" || "alright" || "ya" || "Ya" || "1" || "true" || "sure" || "Sure" || "why not" || "duh")) {
+                chooseToBuy();
+            }
+            else {
+                return console.log("Thanks anyway, we're sorry to see you go!");
+            }
+        });
+};
 
+// Updates charts once a purchase has been made and displays the cost of the purchase to the user.
+// =============================================
+var updateChart = function () {
+    var query = "SELECT * FROM product_table";
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        console.log(chalk.green("\n\n=======\n\nYour purchase has processed successfully."));
+        console.log(chalk.yellow("You spent " + totalPrice + " dollars.\n"));
+        console.log(chalk.green("We've updated quantities based on your purchases. Here's the store now: \n\n=======\n"));
+        var table = new Table({
+            head: ["ID: ", "Item:", "Department:", "Price:", "#:"],
+            colWidths: [7, 25, 30, 10, 7]
+        });
+        for (var i = 0; i < res.length; i++) {
+            table.push(
+                [res[i].id, res[i].product, res[i].department, res[i].price, res[i].quantity]
+            );
+        };
+        console.log(table.toString());
+        console.log("\n");
+        buyMoreQuestion();
+    });
+};
 
-
-// //Function to select an item by its ID:
-// var chooseByID = function (n) {
-//     var query = "SELECT product FROM product_table WHERE ?";
-//     connection.query(query, { id: n }, function (err, res) {
-//         if (err) throw err;
-//         id = n;
-//         item = res[0].product;
-//         // console.log("Test for id defined: "+id);
-//         // console.log("Product at the id that the function called: " + item);
-//         // console.log(item);
-//     });
-// };
-
-// //Function that chooses what to buy
-// var chooseToBuy = function () {
-//     inquirer
-//         .prompt([
-//             {
-//                 type: "input",
-//                 name: "buySelection",
-//                 message: "Choose an item you'd like to purchase!\n\nPlease provide us with the item's ID#: "
-//             }
-//         ])
-//         .then(function (answerOne) {
-//             id = answerOne.buySelection;
-//             chooseByID(id);
-//             var query = "SELECT * FROM product_table WHERE ?";
-//             connection.query(query, { id: id }, function (err, res) {
-//                 if (err) throw err;
-//                 fullProductPicked = res[0];
-//                 // console.log (fullProductPicked);
-//                 // console.log (fullProductPicked.id + fullProductPicked.product + fullProductPicked.department+fullProductPicked.quantity+fullProductPicked.price);
-
-
-//                 console.log("You've chosen to buy " + item + " from our store. Thanks!");
-
-//                 inquirer
-//                     .prompt([
-//                         {
-//                             type: "input",
-//                             name: "buyQuantity",
-//                             message: "How many would you like to purchase?"
-//                         }
-//                     ])
-//                     .then(function (answerTwo) {
-//                         console.log("Screw this hard.");
-//                     });
-//                     //     var howMany = answerTwo.buyQuantity;
-//                     //     if (howMany >= fullProductPicked.quantity) {
-//                     //         var newQuantity = (fullProductPicked.quantity - howMany);
-//                     //         var query = "UPDATE product_table SET 10 WHERE id ="+answerOne.buySelection;
-//                     //             // [
-//                     //             //     {
-//                     //             //         quantity: newQuantity
-//                     //             //     },
-//                     //             //     {
-//                     //             //         id: id
-//                     //             //     }
-//                     //             // ];
-//                     //         connection.query(query, { id: id }, function (err, res) {
-//                     //             console.log(newQuantity);
-//                     //             console.log("Purchase successful. Thank you!");
-//                     //             generateStore();
-//                     //             console.log("We made it through!" + howMany);
-//                     //         });
-
-//                     //     } else {
-
-//                     //     };
-
-//                     // }); //end of 2nd then
-//         });
-// });
-
+// Kick it off.
+// =============================================
 generateStore();
-// // populateProductList();
-// // chooseByID(3);
-// // chooseToBuy();
